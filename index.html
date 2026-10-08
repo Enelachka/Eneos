@@ -155,6 +155,20 @@
       margin-top: 8px;
     }
 
+    /* логотип сверху */
+    .logo {
+      width: 96px;
+      height: 96px;
+      margin-bottom: 12px;
+      filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.4));
+      animation: logoFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
     /* ===== Баннер на весь экран (редактируй текст в HTML) ===== */
     .banner {
       width: 100vw;
@@ -281,6 +295,7 @@
 
   <!-- ===== РЕДАКТИРУЙ ТЕКСТЫ НИЖЕ ===== -->
   <header>
+    <img class="logo" src="logo.png" alt="Логотип">
     <h1>Рад что поставили мою сборку Windows 🙂</h1>
     <p>Прозрачные плиточки со словами</p>
   </header>
