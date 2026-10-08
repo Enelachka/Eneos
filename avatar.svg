@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#667eea"/>
+      <stop offset="0.5" stop-color="#764ba2"/>
+      <stop offset="1" stop-color="#f093fb"/>
+    </linearGradient>
+    <linearGradient id="ghost" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#d9c8ff"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.42" r="0.55">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- фон -->
+  <rect x="8" y="8" width="240" height="240" rx="56" fill="url(#bg)"/>
+  <rect x="8" y="8" width="240" height="240" rx="56" fill="url(#glow)"/>
+  <rect x="8" y="8" width="240" height="240" rx="56" fill="none" stroke="#ffffff" stroke-opacity="0.45" stroke-width="4"/>
+
+  <!-- привидение -->
+  <path d="M68,200 L68,120 C68,82 94,58 128,58 C162,58 188,82 188,120 L188,200 L173,188 L158,200 L143,188 L128,200 L113,188 L98,200 L83,188 Z"
+        fill="url(#ghost)" opacity="0.96"/>
+  <!-- глаза -->
+  <ellipse cx="108" cy="120" rx="10" ry="14" fill="#2b1a5e"/>
+  <ellipse cx="148" cy="120" rx="10" ry="14" fill="#2b1a5e"/>
+  <circle cx="111" cy="115" r="3.2" fill="#ffffff"/>
+  <circle cx="151" cy="115" r="3.2" fill="#ffffff"/>
+  <!-- улыбка -->
+  <path d="M112,150 Q128,163 144,150" fill="none" stroke="#2b1a5e" stroke-width="6" stroke-linecap="round"/>
+  <!-- румянец -->
+  <circle cx="94" cy="140" r="7" fill="#f093fb" opacity="0.55"/>
+  <circle cx="162" cy="140" r="7" fill="#f093fb" opacity="0.55"/>
+
+  <!-- искры -->
+  <path d="M52,52 l3,7 7,3 -7,3 -3,7 -3,-7 -7,-3 7,-3 Z" fill="#ffffff" opacity="0.9"/>
+  <path d="M202,64 l2.2,5.4 5.4,2.2 -5.4,2.2 -2.2,5.4 -2.2,-5.4 -5.4,-2.2 5.4,-2.2 Z" fill="#ffffff" opacity="0.75"/>
+  <circle cx="212" cy="180" r="4" fill="#ffffff" opacity="0.7"/>
+  <circle cx="46" cy="190" r="3" fill="#ffffff" opacity="0.6"/>
+</svg>
