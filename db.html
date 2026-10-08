@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>База данных</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Consolas', 'Courier New', monospace;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      padding: 40px 20px;
+      color: #d6f5d6;
+    }
+    header { text-align: center; margin-bottom: 26px; font-family: 'Segoe UI', sans-serif; }
+    header h1 { font-size: 1.8rem; color: #fff; }
+    header p { opacity: 0.7; font-size: 0.9rem; margin-top: 6px; color: #fff; }
+    .wrap { max-width: 760px; margin: 0 auto; }
+    .card {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(120, 255, 150, 0.25);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .card h2 { font-size: 1.1rem; margin-bottom: 12px; color: #fff; font-family: 'Segoe UI', sans-serif; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; word-break: break-all; }
+    td { padding: 8px 6px; border-bottom: 1px solid rgba(120,255,150,0.15); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    td.key { color: #8fd6ff; white-space: nowrap; }
+    button {
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      color: #fff;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    button:hover { background: rgba(255, 255, 255, 0.25); }
+    button.danger { background: rgba(255, 80, 80, 0.25); border-color: rgba(255,120,120,0.5); }
+    button.small { padding: 4px 10px; font-size: 0.8rem; }
+    input[type="password"], input[type="text"] {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px 12px;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      outline: none;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .row { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+    .err { color: #ffb3b3; font-size: 0.85rem; min-height: 20px; margin-top: 6px; font-family: 'Segoe UI', sans-serif; }
+    .muted { opacity: 0.6; font-size: 0.85rem; }
+    #gate { max-width: 340px; margin: 0 auto; }
+    #panel[hidden] { display: none; }
+    .back { display: block; text-align: center; margin-top: 10px; color: #fff; opacity: 0.7; font-family: 'Segoe UI', sans-serif; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🗄 База данных</h1>
+    <p>Все ключи сайта в этом браузере. Отдельный пароль.</p>
+  </header>
+
+  <div class="wrap">
+    <div id="gate" class="card">
+      <h2>Вход в базу</h2>
+      <input id="dbPass" type="password" placeholder="Пароль базы данных">
+      <button id="dbGo" style="width:100%">Войти</button>
+      <div id="gateErr" class="err"></div>
+      <p class="muted">По умолчанию: db123 (смени после входа)</p>
+    </div>
+
+    <div id="panel" hidden>
+      <div class="card">
+        <h2>localStorage</h2>
+        <table id="lsTable"></table>
+      </div>
+      <div class="card">
+        <h2>sessionStorage</h2>
+        <table id="ssTable"></table>
+      </div>
+      <div class="card">
+        <h2>💾 Бэкап</h2>
+        <div class="row">
+          <button id="expBtn">Скачать JSON</button>
+          <button id="impBtn">Загрузить JSON</button>
+          <input id="impFile" type="file" accept=".json" hidden>
+        </div>
+        <div class="row">
+          <input id="newDbPw" type="password" placeholder="Новый пароль базы" style="flex:1">
+          <button id="pwGo">ОК</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>🗑 Опасная зона</h2>
+        <button id="wipeDb" class="danger">Удалить все ключи</button>
+      </div>
+      <button id="dbOut" style="width:100%">Выйти из базы</button>
+    </div>
+
+    <a class="back" href="admin.html">← Назад в админку</a>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const esc = (s) => String(s).replace(/[<>&]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]));
+    const getPw = () => {
+      try { return localStorage.getItem('sb_db_pw') || 'db123'; }
+      catch (e) { return 'db123'; }
+    };
+
+    function dump(store, tableId) {
+      const rows = [];
+      for (let i = 0; i < store.length; i++) {
+        const k = store.key(i);
+        let v = store.getItem(k);
+        if (v && v.length > 500) v = v.slice(0, 500) + '…';
+        rows.push(`<tr><td class="key">${esc(k)}</td><td>${esc(v)}</td><td style="text-align:right"><button class="small" data-k="${esc(k)}" data-s="${tableId}">✕</button></td></tr>`);
+      }
+      $(tableId).innerHTML = rows.length ? rows.join('') : '<tr><td class="muted">Пусто</td></tr>';
+      $(tableId).querySelectorAll('[data-k]').forEach((b) => {
+        b.addEventListener('click', () => {
+          (b.dataset.s === 'lsTable' ? localStorage : sessionStorage).removeItem(b.dataset.k);
+          render();
+        });
+      });
+    }
+
+    function render() {
+      dump(localStorage, 'lsTable');
+      dump(sessionStorage, 'ssTable');
+    }
+
+    function showPanel(show) {
+      $('gate').hidden = show;
+      $('panel').hidden = !show;
+      if (show) render();
+    }
+
+    if (sessionStorage.getItem('sb_db') === '1') showPanel(true);
+    $('dbGo').addEventListener('click', () => {
+      if ($('dbPass').value === getPw()) {
+        sessionStorage.setItem('sb_db', '1');
+        $('dbPass').value = '';
+        showPanel(true);
+      } else {
+        $('gateErr').textContent = 'Неверный пароль';
+      }
+    });
+    $('dbPass').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') $('dbGo').click();
+    });
+
+    $('pwGo').addEventListener('click', () => {
+      const v = $('newDbPw').value;
+      if (v.length < 4) return;
+      try { localStorage.setItem('sb_db_pw', v); } catch (e) {}
+      $('newDbPw').value = '';
+      $('newDbPw').placeholder = 'Готово!';
+      setTimeout(() => { $('newDbPw').placeholder = 'Новый пароль базы'; }, 1500);
+    });
+
+    $('expBtn').addEventListener('click', () => {
+      const data = { local: {}, session: {} };
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        data.local[k] = localStorage.getItem(k);
+      }
+      for (let i = 0; i < sessionStorage.length; i++) {
+        const k = sessionStorage.key(i);
+        data.session[k] = sessionStorage.getItem(k);
+      }
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'site-backup.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+
+    $('impBtn').addEventListener('click', () => $('impFile').click());
+    $('impFile').addEventListener('change', () => {
+      const f = $('impFile').files[0];
+      if (!f) return;
+      const r = new FileReader();
+      r.onload = () => {
+        try {
+          const data = JSON.parse(r.result);
+          Object.entries(data.local || {}).forEach(([k, v]) => localStorage.setItem(k, v));
+          Object.entries(data.session || {}).forEach(([k, v]) => sessionStorage.setItem(k, v));
+          render();
+        } catch (e) { alert('Битый файл'); }
+      };
+      r.readAsText(f);
+    });
+
+    $('wipeDb').addEventListener('click', () => {
+      if (!confirm('Точно удалить ВСЕ ключи localStorage и sessionStorage?')) return;
+      localStorage.clear();
+      sessionStorage.clear();
+      render();
+    });
+
+    $('dbOut').addEventListener('click', () => {
+      sessionStorage.removeItem('sb_db');
+      showPanel(false);
+    });
+  </script>
+</body>
+</html>

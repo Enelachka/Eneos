@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Наши ссылки</title>
+  <link rel="stylesheet" href="player.css">
+  <link rel="stylesheet" href="auth.css">
+  <style>
+    /* Тот же фон, что на главной */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+      background-size: 300% 300%;
+      animation: bgMove 12s ease infinite;
+      padding: 40px 20px;
+      color: #fff;
+    }
+
+    @keyframes bgMove {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    header { text-align: center; margin-bottom: 30px; }
+    header h1 { font-size: 2rem; text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3); }
+
+    /* ===== Список ссылок (редактируй ниже) ===== */
+    .links {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .links a {
+      display: block;
+      text-align: center;
+      padding: 16px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 14px;
+      transition: transform 0.25s, background 0.25s;
+    }
+
+    .links a:hover {
+      transform: translateY(-3px);
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* кнопка "назад" - маленькая плитка */
+    .back {
+      display: block;
+      width: fit-content;
+      margin: 30px auto 0;
+      padding: 10px 24px;
+      font-size: 0.95rem;
+      color: #fff;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 12px;
+      transition: transform 0.25s, background 0.25s;
+    }
+
+    .back:hover {
+      transform: translateY(-3px);
+      background: rgba(255, 255, 255, 0.25);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Наши ссылки</h1>
+  </header>
+
+  <!-- ===== РЕДАКТИРУЙ ССЫЛКИ: меняй текст и href ===== -->
+  <main class="links">
+    <a href="https://example.com">Ссылка 1 — замени адрес</a>
+    <a href="https://example.com">Ссылка 2 — замени адрес</a>
+    <a href="https://example.com">Ссылка 3 — замени адрес</a>
+  </main>
+
+  <!-- Мини-плеер (общий с главной) -->
+  <div id="player">
+    <div class="pl-cover">🎵</div>
+    <div class="eq"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="pl-main">
+      <div id="plTitle">Загрузка...</div>
+      <div class="pl-row">
+        <button id="plPrev" title="Назад">⏮</button>
+        <button id="plPlay" title="Пауза/играть">▶</button>
+        <button id="plNext" title="Вперед">⏭</button>
+        <span id="plCur">0:00</span>
+        <input id="plSeek" type="range" min="0" max="1000" value="0" title="Перемотка">
+        <span id="plDur">0:00</span>
+        <input id="plVol" type="range" min="0" max="100" value="30" title="Громкость">
+      </div>
+    </div>
+  </div>
+  <script src="music/playlist.js"></script>
+  <script src="player.js"></script>
+
+  <button id="authBtn">Войти</button>
+  <div id="userChip" hidden>Привет, <b id="userName"></b>!<button id="logoutBtn">Выйти</button></div>
+  <div id="authModal" hidden>
+    <div class="auth-box">
+      <button id="authClose" title="Закрыть">✕</button>
+      <div class="auth-tabs">
+        <button data-t="login" class="active">Вход</button>
+        <button data-t="reg">Регистрация</button>
+      </div>
+      <input id="authName" placeholder="Имя" maxlength="20" autocomplete="username">
+      <input id="authPass" type="password" placeholder="Пароль" autocomplete="current-password">
+      <div id="authErr"></div>
+      <button id="authGo">Войти</button>
+    </div>
+  </div>
+  <script src="auth.js"></script>
+
+  <a class="back" href="index.html">← Назад на главную</a>
+</body>
+</html>

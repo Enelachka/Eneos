@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Спасибо!</title>
+  <link rel="stylesheet" href="player.css">
+  <link rel="stylesheet" href="auth.css">
+  <style>
+    /* ===== Фон страницы (меняй градиент здесь) ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+      background-size: 300% 300%;
+      animation: bgMove 12s ease infinite;
+      padding: 40px 20px;
+      color: #fff;
+    }
+
+    @keyframes bgMove {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* ===== Интро-анимация входа ===== */
+    #intro {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 40%, #2b1a5e, #0d0620 70%);
+      animation: introHide 0.8s ease 2.4s forwards; /* исчезновение */
+    }
+
+    .intro-inner { text-align: center; }
+
+    .intro-logo {
+      font-size: 4rem;
+      animation: logoPop 0.7s cubic-bezier(0.2, 1.6, 0.4, 1) both,
+                 logoGlow 1.6s ease-in-out 0.7s infinite alternate;
+    }
+
+    .intro-title {
+      margin-top: 12px;
+      font-size: 2.2rem;
+      letter-spacing: 2px;
+      opacity: 0;
+      animation: titleIn 0.8s ease 0.4s forwards;
+    }
+
+    .intro-bar {
+      width: 240px;
+      height: 6px;
+      margin: 24px auto 0;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.15);
+      overflow: hidden;
+    }
+
+    .intro-bar span {
+      display: block;
+      height: 100%;
+      width: 0;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #667eea, #f093fb);
+      animation: barFill 1.8s ease 0.4s forwards;
+    }
+
+    @keyframes logoPop {
+      from { transform: scale(0); }
+      to { transform: scale(1); }
+    }
+
+    @keyframes logoGlow {
+      from { filter: drop-shadow(0 0 6px #f093fb); transform: scale(1); }
+      to { filter: drop-shadow(0 0 22px #667eea); transform: scale(1.12); }
+    }
+
+    @keyframes titleIn {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes barFill {
+      to { width: 100%; }
+    }
+
+    @keyframes introHide {
+      to { opacity: 0; visibility: hidden; }
+    }
+
+    /* ===== Взрыв в конце интро ===== */
+    #flash {
+      position: fixed;
+      inset: 0;
+      z-index: 101;
+      background: #fff;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #flash.go { animation: flashBoom 0.5s ease-out forwards; }
+
+    @keyframes flashBoom {
+      0% { opacity: 0; }
+      15% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    .ring {
+      position: fixed;
+      left: 50%;
+      top: 42%;
+      width: 60px;
+      height: 60px;
+      margin: -30px 0 0 -30px;
+      z-index: 102;
+      border: 4px solid #f093fb;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: ringBoom 0.7s ease-out forwards;
+    }
+
+    @keyframes ringBoom {
+      to { transform: scale(14); opacity: 0; }
+    }
+
+    .particle {
+      position: fixed;
+      z-index: 102;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    /* ===== Шапка (редактируй заголовок) ===== */
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    header p {
+      opacity: 0.85;
+      margin-top: 8px;
+    }
+
+    /* ===== Баннер на весь экран (редактируй текст в HTML) ===== */
+    .banner {
+      width: 100vw;
+      margin-left: calc(-50vw + 50%);
+      text-align: center;
+      padding: 60px 20px;
+      margin-bottom: 40px;
+      background: rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .banner h2 {
+      font-size: 2rem;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .banner p {
+      margin-top: 10px;
+      font-size: 1.1rem;
+      opacity: 0.85;
+    }
+
+    /* живой счетчик и часы в баннере */
+    .stats {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      margin-top: 20px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
+    }
+
+    /* ===== Ночная тема ===== */
+    body.night {
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      background-size: 300% 300%;
+    }
+
+    /* ===== Кнопка темы ===== */
+    #themeBtn {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      width: 52px;
+      height: 52px;
+      font-size: 1.4rem;
+      color: #fff;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 50%;
+      transition: transform 0.25s, background 0.25s;
+    }
+
+    #themeBtn:hover {
+      transform: scale(1.1);
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* ===== Сетка плиток ===== */
+    .tiles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+      perspective: 800px; /* для 3D-наклона */
+    }
+
+    /* ===== Прозрачная плиточка со словом (главный стиль) ===== */
+    .tile {
+      background: rgba(255, 255, 255, 0.15); /* прозрачность - меняй 0.15 */
+      backdrop-filter: blur(12px);           /* эффект стекла */
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 16px;
+      padding: 30px 20px;
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: 600;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+      transition: transform 0.25s, background 0.25s;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .tile:hover {
+      transform: translateY(-6px) scale(1.02);
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .tile small {
+      display: block;
+      margin-top: 10px;
+      font-size: 0.85rem;
+      font-weight: 400;
+      opacity: 0.8;
+    }
+
+    /* плитка-ссылка выглядит так же, как остальные */
+    a.tile {
+      color: inherit;
+      text-decoration: none;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <!-- ===== Крутая анимация входа (текст меняй ниже) ===== -->
+  <div id="intro">
+    <div class="intro-inner">
+      <div class="intro-logo">⚡</div>
+      <h1 class="intro-title">Добро пожаловать!</h1>
+      <div class="intro-bar"><span></span></div>
+    </div>
+  </div>
+
+  <!-- ===== РЕДАКТИРУЙ ТЕКСТЫ НИЖЕ ===== -->
+  <header>
+    <h1>Рад что поставили мою сборку Windows 🙂</h1>
+    <p>Прозрачные плиточки со словами</p>
+  </header>
+
+  <div class="banner">
+    <!-- Редактируй текст баннера -->
+    <h2>Добро пожаловать в сборку!</h2>
+    <p>Быстро. Красиво. Безопасно.</p>
+    <!-- Живой счетчик и часы -->
+    <div class="stats">
+      <div>🕒 Время: <span id="clock">--:--:--</span></div>
+    </div>
+  </div>
+
+  <!-- Мини-плеер: обложка, название, пауза, перемотка -->
+  <div id="player">
+    <div class="pl-cover">🎵</div>
+    <div class="eq"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="pl-main">
+      <div id="plTitle">Загрузка...</div>
+      <div class="pl-row">
+        <button id="plPrev" title="Назад">⏮</button>
+        <button id="plPlay" title="Пауза/играть">▶</button>
+        <button id="plNext" title="Вперед">⏭</button>
+        <span id="plCur">0:00</span>
+        <input id="plSeek" type="range" min="0" max="1000" value="0" title="Перемотка">
+        <span id="plDur">0:00</span>
+        <input id="plVol" type="range" min="0" max="100" value="30" title="Громкость">
+      </div>
+    </div>
+  </div>
+  <script src="music/playlist.js"></script>
+  <script src="player.js"></script>
+  <!-- Вход: аккаунты живут в этом браузере (без сервера иначе никак) -->
+  <button id="authBtn">Войти</button>
+  <div id="userChip" hidden>Привет, <b id="userName"></b>!<button id="logoutBtn">Выйти</button></div>
+  <div id="authModal" hidden>
+    <div class="auth-box">
+      <button id="authClose" title="Закрыть">✕</button>
+      <div class="auth-tabs">
+        <button data-t="login" class="active">Вход</button>
+        <button data-t="reg">Регистрация</button>
+      </div>
+      <input id="authName" placeholder="Имя" maxlength="20" autocomplete="username">
+      <input id="authPass" type="password" placeholder="Пароль" autocomplete="current-password">
+      <div id="authErr"></div>
+      <button id="authGo">Войти</button>
+    </div>
+  </div>
+  <script src="auth.js"></script>
+  <!-- Переключатель темы день/ночь -->
+  <button id="themeBtn" title="Сменить тему">🌙</button>
+
+  <main class="tiles">
+    <!-- Чтобы добавить плитку - скопируй блок div.tile -->
+    <div class="tile">Супер быстрая сборка<small>описание первой плитки</small></div>
+    <div class="tile">Игровая сборка<small>описание второй плитки</small></div>
+    <div class="tile">Никто за вами не следит<small>описание третьей плитки</small></div>
+    <div class="tile">Вирусы вашему ПК не угроза, мы защитим вас<small>описание четвёртой плитки</small></div>
+    <div class="tile">Мы старались над сборкой<small>описание пятой плитки</small></div>
+        <a class="tile link-tile" href="links.html">Наши ссылки<small>нажми, чтобы открыть</small></a>
+  </main>
+  <script>
+    // (плеер живет в player.js, продолжает играть между страницами)
+    setTimeout(() => {
+      const flash = document.createElement('div');
+      flash.id = 'flash';
+      document.body.appendChild(flash);
+      requestAnimationFrame(() => flash.classList.add('go'));
+
+      const ring = document.createElement('div');
+      ring.className = 'ring';
+      document.body.appendChild(ring);
+
+      // разлетающиеся частицы
+      const colors = ['#667eea', '#f093fb', '#ffffff', '#ffd166', '#764ba2'];
+      for (let i = 0; i < 40; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.background = colors[i % colors.length];
+        p.style.left = '50%';
+        p.style.top = '42%';
+        document.body.appendChild(p);
+        const angle = (Math.PI * 2 * i) / 40 + Math.random() * 0.3;
+        const dist = 150 + Math.random() * 350;
+        p.animate([
+          { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+          { transform: `translate(${Math.cos(angle) * dist}px, ${Math.sin(angle) * dist}px) scale(0)`, opacity: 0 }
+        ], { duration: 700 + Math.random() * 500, easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)' }).onfinish = () => p.remove();
+      }
+
+      setTimeout(() => {
+        flash.remove();
+        ring.remove();
+        const intro = document.getElementById('intro');
+        if (intro) intro.remove();
+      }, 900);
+    }, 2500);
+
+    // ===== 3D-наклон плиток за курсором =====
+    document.querySelectorAll('.tile').forEach((tile) => {
+      tile.addEventListener('mousemove', (e) => {
+        const r = tile.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        tile.style.transform = `translateY(-6px) rotateY(${x * 14}deg) rotateX(${-y * 14}deg)`;
+      });
+      tile.addEventListener('mouseleave', () => {
+        tile.style.transform = '';
+      });
+    });
+
+    // ===== Переключатель темы день/ночь (выбор помнится) =====
+    const themeBtn = document.getElementById('themeBtn');
+    if (localStorage.getItem('theme') === 'night') {
+      document.body.classList.add('night');
+      themeBtn.textContent = '☀️';
+    }
+    themeBtn.addEventListener('click', () => {
+      const night = document.body.classList.toggle('night');
+      themeBtn.textContent = night ? '☀️' : '🌙';
+      localStorage.setItem('theme', night ? 'night' : 'day');
+    });
+
+    // ===== Живые часы =====
+    const clockEl = document.getElementById('clock');
+    function tickClock() {
+      clockEl.textContent = new Date().toLocaleTimeString('ru-RU');
+    }
+    tickClock();
+    setInterval(tickClock, 1000);
+  </script>
+</body>
+</html>

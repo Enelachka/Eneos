@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Админка</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #232526, #414345);
+      padding: 40px 20px;
+      color: #fff;
+    }
+    header { text-align: center; margin-bottom: 26px; }
+    header h1 { font-size: 1.8rem; }
+    header p { opacity: 0.7; font-size: 0.9rem; margin-top: 6px; }
+    .wrap { max-width: 640px; margin: 0 auto; }
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .card h2 { font-size: 1.1rem; margin-bottom: 12px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+    td { padding: 8px 4px; border-bottom: 1px solid rgba(255,255,255,0.15); }
+    tr:last-child td { border-bottom: none; }
+    button {
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      color: #fff;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+    }
+    button:hover { background: rgba(255, 255, 255, 0.28); }
+    button.danger { background: rgba(255, 80, 80, 0.25); border-color: rgba(255,120,120,0.5); }
+    input {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px 12px;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      outline: none;
+    }
+    .row { display: flex; gap: 10px; align-items: center; }
+    .row input { margin-bottom: 0; }
+    .err { color: #ffb3b3; font-size: 0.85rem; min-height: 20px; margin-top: 6px; }
+    .muted { opacity: 0.65; font-size: 0.85rem; }
+    #gate { max-width: 340px; margin: 0 auto; }
+    #panel[hidden] { display: none; }
+    .back { display: block; text-align: center; margin-top: 10px; color: #fff; opacity: 0.7; }
+
+    /* ===== Красивое меню смены пароля (плитка как на главном сайте) ===== */
+    #pwModal {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10, 5, 25, 0.6);
+      backdrop-filter: blur(4px);
+    }
+    #pwModal[hidden] { display: none; }
+    .pw-tile {
+      width: min(340px, calc(100vw - 40px));
+      padding: 28px 24px;
+      text-align: center;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 16px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    }
+    .pw-tile h2 { font-size: 1.2rem; margin-bottom: 4px; }
+    .pw-tile p { opacity: 0.8; font-size: 0.9rem; margin-bottom: 14px; }
+    .pw-tile input {
+      width: 100%;
+      margin-bottom: 12px;
+      padding: 10px 12px;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      outline: none;
+    }
+    .pw-tile .row { display: flex; gap: 10px; }
+    .pw-tile .row button { flex: 1; }
+    .pw-err { color: #ffb3b3; font-size: 0.85rem; min-height: 20px; margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🔧 Админка</h1>
+    <p>Локальная: видит только этот браузер, общего доступа нет</p>
+  </header>
+
+  <div class="wrap">
+    <!-- Вход по паролю -->
+    <div id="gate" class="card">
+      <h2>Вход</h2>
+      <input id="adminPass" type="password" placeholder="Пароль админа">
+      <button id="adminGo" style="width:100%">Войти</button>
+      <div id="gateErr" class="err"></div>
+      <p class="muted">По умолчанию: admin123 (смени после входа)</p>
+    </div>
+
+    <!-- Панель -->
+    <div id="panel" hidden>
+      <div class="card">
+        <h2>👥 Пользователи (<span id="uCount">0</span>)</h2>
+        <table id="uTable"></table>
+      </div>
+      <div class="card">
+        <h2>📊 Статистика</h2>
+        <table>
+          <tr><td>Визитов на сайт</td><td id="stVisits">0</td></tr>
+          <tr><td>Аккаунтов</td><td id="stUsers">0</td></tr>
+          <tr><td>Треков в плеере</td><td id="stTracks">0</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h2>🗄 База данных</h2>
+        <p class="muted" style="margin-bottom:12px">Отдельный раздел со своим паролем.</p>
+        <a href="db.html" style="text-decoration:none"><button style="width:100%">Открыть базу данных →</button></a>
+      </div>
+      <div class="card">
+        <h2>🔑 Сменить пароль админа</h2>
+        <div class="row">
+          <input id="newPw" type="password" placeholder="Новый пароль">
+          <button id="pwGo">ОК</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>🗑 Опасная зона</h2>
+        <button id="wipe" class="danger">Стереть все данные сайта</button>
+      </div>
+      <button id="adminOut" style="width:100%">Выйти из админки</button>
+    </div>
+
+    <a class="back" href="index.html">← На главную</a>
+  </div>
+
+  <!-- Меню смены пароля -->
+  <div id="pwModal" hidden>
+    <div class="pw-tile">
+      <h2>🔑 Смена пароля</h2>
+      <p id="pwFor">для ...</p>
+      <input id="pwNew" type="text" placeholder="Новый пароль (мин. 4)">
+      <div id="pwErr" class="pw-err"></div>
+      <div class="row">
+        <button id="pwSave">Сохранить</button>
+        <button id="pwCancel">Отмена</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="music/playlist.js"></script>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const getPw = () => {
+      try { return localStorage.getItem('sb_admin_pw') || 'admin123'; }
+      catch (e) { return 'admin123'; }
+    };
+    const getUsers = () => {
+      try { return JSON.parse(localStorage.getItem('sb_users') || '{}'); }
+      catch (e) { return {}; }
+    };
+
+    function showPanel(show) {
+      $('gate').hidden = show;
+      $('panel').hidden = !show;
+      if (show) render();
+    }
+
+    let lastDb = {};
+
+    function render() {
+      const db = getUsers();
+      lastDb = db;
+      const names = Object.keys(db);
+      $('uCount').textContent = names.length;
+      $('uTable').innerHTML = names.length
+        ? names.map((n) => {
+            const hasPw = db[n] && db[n].pass;
+            const label = hasPw ? '•••' : '(хеш, пароль скрыт)';
+            return `<tr><td>${n.replace(/[<>&]/g, '')}<br><span class="muted">🔑 <span data-pwtext="${n.replace(/"/g, '')}">${label}</span> <button class="small" data-eye="${n.replace(/"/g, '')}" title="Показать">👁</button></span></td><td style="text-align:right;white-space:nowrap"><button data-pw="${n.replace(/"/g, '')}">Пароль</button> <button data-del="${n.replace(/"/g, '')}">Удалить</button></td></tr>`;
+          }).join('')
+        : '<tr><td class="muted">Пока никого нет</td></tr>';
+      // показать/скрыть пароль
+      $('uTable').querySelectorAll('[data-eye]').forEach((b) => {
+        b.addEventListener('click', () => {
+          const cell = $('uTable').querySelector(`[data-pwtext="${b.dataset.eye}"]`);
+          if (!cell || !lastDb[b.dataset.eye] || !lastDb[b.dataset.eye].pass) return;
+          const shown = cell.dataset.shown === '1';
+          cell.textContent = shown ? '•••' : lastDb[b.dataset.eye].pass;
+          cell.dataset.shown = shown ? '' : '1';
+          b.textContent = shown ? '👁' : '🙈';
+        });
+      });
+      // красивое меню смены пароля вместо prompt
+      $('uTable').querySelectorAll('[data-pw]').forEach((b) => {
+        b.addEventListener('click', () => {
+          window.__pwTarget = b.dataset.pw;
+          $('pwFor').textContent = 'для «' + pwTarget + '»';
+          $('pwNew').value = '';
+          $('pwErr').textContent = '';
+          $('pwModal').hidden = false;
+          $('pwNew').focus();
+        });
+      });
+      $('uTable').querySelectorAll('[data-del]').forEach((b) => {
+        b.addEventListener('click', () => {
+          const d = getUsers();
+          delete d[b.dataset.del];
+          try {
+            localStorage.setItem('sb_users', JSON.stringify(d));
+            if (localStorage.getItem('sb_session') === b.dataset.del) localStorage.removeItem('sb_session');
+          } catch (e) {}
+          render();
+        });
+      });
+      let visits = 0;
+      try { visits = parseInt(localStorage.getItem('sb_visits') || '0', 10) || 0; } catch (e) {}
+      $('stVisits').textContent = visits;
+      $('stUsers').textContent = names.length;
+      $('stTracks').textContent = (typeof PLAYLIST !== 'undefined') ? PLAYLIST.length : '—';
+    }
+
+    // сохранение из красивого меню (цель - window.__pwTarget)
+    $('pwSave').addEventListener('click', () => {
+      const np = $('pwNew').value;
+      if (!np || np.length < 4) { $('pwErr').textContent = 'Минимум 4 символа'; return; }
+      const d = getUsers();
+      if (!d[window.__pwTarget]) return;
+      d[window.__pwTarget] = { pass: np };
+      try { localStorage.setItem('sb_users', JSON.stringify(d)); } catch (e) {}
+      $('pwModal').hidden = true;
+      render();
+    });
+    $('pwCancel').addEventListener('click', () => { $('pwModal').hidden = true; });
+    $('pwModal').addEventListener('click', (e) => {
+      if (e.target === $('pwModal')) $('pwModal').hidden = true;
+    });
+    $('pwNew').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') $('pwSave').click();
+    });
+
+    // вход
+    if (sessionStorage.getItem('sb_admin') === '1') showPanel(true);    $('adminGo').addEventListener('click', () => {
+      if ($('adminPass').value === getPw()) {
+        sessionStorage.setItem('sb_admin', '1');
+        $('adminPass').value = '';
+        showPanel(true);
+      } else {
+        $('gateErr').textContent = 'Неверный пароль';
+      }
+    });
+    $('adminPass').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') $('adminGo').click();
+    });
+
+    // смена пароля
+    $('pwGo').addEventListener('click', () => {
+      const v = $('newPw').value;
+      if (v.length < 4) return;
+      try { localStorage.setItem('sb_admin_pw', v); } catch (e) {}
+      $('newPw').value = '';
+      $('newPw').placeholder = 'Готово!';
+      setTimeout(() => { $('newPw').placeholder = 'Новый пароль'; }, 1500);
+    });
+
+    // стереть всё
+    $('wipe').addEventListener('click', () => {
+      if (!confirm('Точно стереть аккаунты, сессию и счетчики?')) return;
+      ['sb_users', 'sb_session', 'sb_visits', 'pl_i', 'pl_t', 'pl_on'].forEach((k) => {
+        try { localStorage.removeItem(k); sessionStorage.removeItem(k); } catch (e) {}
+      });
+      render();
+    });
+
+    $('adminOut').addEventListener('click', () => {
+      sessionStorage.removeItem('sb_admin');
+      showPanel(false);
+    });
+  </script>
+</body>
+</html>

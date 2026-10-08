@@ -1,0 +1,149 @@
+/* Вход/регистрация: кнопка, окно, плашка пользователя */
+#authBtn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 60;
+  padding: 10px 22px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 12px;
+  transition: transform 0.25s, background 0.25s;
+}
+
+#authBtn:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+#userChip {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 60;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 12px;
+}
+
+#userChip button {
+  margin-left: 10px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+  color: #fff;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 8px;
+}
+
+#authModal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 5, 25, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+#authModal[hidden] {
+  display: none;
+}
+
+.auth-box {
+  position: relative;
+  width: min(340px, calc(100vw - 40px));
+  padding: 26px 24px;
+  text-align: center;
+  color: #fff;
+  background: rgba(30, 20, 60, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 18px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.auth-tabs button {
+  flex: 1;
+  padding: 8px;
+  font-size: 0.9rem;
+  color: #fff;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  opacity: 0.6;
+}
+
+.auth-tabs button.active {
+  background: rgba(255, 255, 255, 0.2);
+  opacity: 1;
+}
+
+.auth-box input {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  outline: none;
+}
+
+.auth-box input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+#authGo {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(90deg, #667eea, #f093fb);
+  border: none;
+  border-radius: 10px;
+}
+
+#authErr {
+  min-height: 20px;
+  margin: 6px 0;
+  font-size: 0.85rem;
+  color: #ffb3b3;
+}
+
+#authClose {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 1.1rem;
+  color: #fff;
+  cursor: pointer;
+  background: none;
+  border: none;
+  opacity: 0.7;
+}
