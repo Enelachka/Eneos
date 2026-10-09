@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Музыка</title>
+  <link rel="stylesheet" href="player.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+      background-size: 300% 300%;
+      animation: bgMove 12s ease infinite;
+      padding: 40px 20px 120px;
+      color: #fff;
+    }
+    @keyframes bgMove {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    body.night {
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      background-size: 300% 300%;
+    }
+    h1 { font-size: 1.6rem; text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3); }
+    #player { position: static; transform: none; animation: none; width: min(560px, calc(100vw - 40px)); }
+    #themeBtn {
+      padding: 12px 28px;
+      font-size: 1rem;
+      color: #fff;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 14px;
+      transition: transform 0.25s, background 0.25s;
+    }
+    #themeBtn:hover { transform: translateY(-3px); background: rgba(255, 255, 255, 0.25); }
+    .back { color: #fff; opacity: 0.8; }
+  </style>
+</head>
+<body>
+  <h1>🎵 Музыка</h1>
+
+  <!-- Тот же плеер, что на главной -->
+  <div id="player">
+    <div class="pl-cover">🎵</div>
+    <div class="eq"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="pl-main">
+      <div id="plTitle">Загрузка...</div>
+      <div class="pl-row">
+        <button id="plPrev" title="Назад">⏮</button>
+        <button id="plPlay" title="Пауза/играть">▶</button>
+        <button id="plNext" title="Вперед">⏭</button>
+        <span id="plCur">0:00</span>
+        <input id="plSeek" type="range" min="0" max="1000" value="0" title="Перемотка">
+        <span id="plDur">0:00</span>
+        <input id="plVol" type="range" min="0" max="100" value="30" title="Громкость">
+      </div>
+    </div>
+  </div>
+  <script src="music/playlist.js"></script>
+  <script src="player.js"></script>
+
+  <button id="themeBtn">🌙 Темная тема</button>
+  <a class="back" href="index.html">← На главную</a>
+
+  <script>
+    // тема день/ночь, выбор помнится
+    const themeBtn = document.getElementById('themeBtn');
+    function paint() {
+      const night = document.body.classList.contains('night');
+      themeBtn.textContent = night ? '☀️ Светлая тема' : '🌙 Темная тема';
+    }
+    if (localStorage.getItem('theme') === 'night') document.body.classList.add('night');
+    paint();
+    themeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('night');
+      localStorage.setItem('theme', document.body.classList.contains('night') ? 'night' : 'day');
+      paint();
+    });
+  </script>
+</body>
+</html>
