@@ -44,7 +44,25 @@
       transition: transform 0.25s, background 0.25s;
     }
     #themeBtn:hover { transform: translateY(-3px); background: rgba(255, 255, 255, 0.25); }
-    .back { color: #fff; opacity: 0.8; }
+
+    /* длинные плитки-ссылки */
+    .long-tiles { width: min(560px, calc(100vw - 40px)); display: flex; flex-direction: column; gap: 12px; }
+    .long-tiles a {
+      display: block;
+      text-align: center;
+      padding: 16px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #fff;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 14px;
+      transition: transform 0.25s, background 0.25s;
+    }
+    .long-tiles a:hover { transform: translateY(-3px); background: rgba(255, 255, 255, 0.25); }
   </style>
 </head>
 <body>
@@ -71,7 +89,13 @@
   <script src="player.js"></script>
 
   <button id="themeBtn">🌙 Темная тема</button>
-  <a class="back" href="index.html">← На главную</a>
+
+  <!-- Длинные плитки: каждая ведет на свой сайт (меняй текст и href) -->
+  <nav class="long-tiles">
+    <a href="https://t.me/Eneosv">Наш ТГК</a>
+    <a href="https://example.com">Сайт 2 — замени ссылку</a>
+    <a href="https://example.com">Сайт 3 — замени ссылку</a>
+  </nav>
 
   <script>
     // тема день/ночь, выбор помнится
