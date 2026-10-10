@@ -27,16 +27,20 @@
     main { max-width: 920px; margin: 0 auto; padding: 50px 16px 60px; text-align: center; }
     main h1 { font-size: clamp(1.8rem, 5vw, 2.6rem); }
     main p { color: #bbb; margin-top: 14px; line-height: 1.7; }
-    .builds { display: flex; flex-direction: column; gap: 16px; margin-top: 34px; }
+    .builds { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 34px; }
     .build {
       display: block;
-      padding: 22px;
+      padding: 26px 22px;
+      min-height: 150px;
       text-decoration: none;
       color: #fff;
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 14px;
       transition: all 0.3s ease;
+    }
+    @media (max-width: 640px) {
+      .builds { grid-template-columns: 1fr; }
     }
     .build:hover { transform: translateY(-3px); border-color: #a855f7; box-shadow: 0 0 20px rgba(168,85,247,0.25); }
     .build h2 { font-size: 1.2rem; margin-bottom: 8px; }
@@ -57,9 +61,9 @@
 
   <div class="builds">
     <!-- EDIT: карточки сборок (название, описание, ссылка) -->
-    <a href="#" class="build"><h2>Сборка 1</h2><p>Описание сборки 1.</p></a>
-    <a href="#" class="build"><h2>Сборка 2</h2><p>Описание сборки 2.</p></a>
-    <a href="#" class="build"><h2>Сборка 3</h2><p>Описание сборки 3.</p></a>
+    <a href="download.html" class="build"><h2>Сборка 1</h2><p>Описание сборки 1.</p></a>
+    <a href="download.html" class="build"><h2>Сборка 2</h2><p>Описание сборки 2.</p></a>
+    <a href="download.html" class="build"><h2>Сборка 3</h2><p>Описание сборки 3.</p></a>
   </div>
 </main>
 
