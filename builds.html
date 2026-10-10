@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Сборки Eneos</title>
+  <link rel="icon" type="image/svg+xml" href="avatar.svg">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0d0a18;
+      color: #fff;
+      min-height: 100vh;
+    }
+    header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      position: sticky; top: 0;
+      background: rgba(13, 10, 24, 0.9);
+      backdrop-filter: blur(12px);
+      z-index: 50;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; font-weight: 800; font-size: 1.2rem; }
+    .logo img { width: 32px; height: 32px; }
+    main { max-width: 920px; margin: 0 auto; padding: 50px 16px 60px; text-align: center; }
+    main h1 { font-size: clamp(1.8rem, 5vw, 2.6rem); }
+    main p { color: #bbb; margin-top: 14px; line-height: 1.7; }
+    .builds { display: flex; flex-direction: column; gap: 16px; margin-top: 34px; }
+    .build {
+      display: block;
+      padding: 22px;
+      text-decoration: none;
+      color: #fff;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      transition: all 0.3s ease;
+    }
+    .build:hover { transform: translateY(-3px); border-color: #a855f7; box-shadow: 0 0 20px rgba(168,85,247,0.25); }
+    .build h2 { font-size: 1.2rem; margin-bottom: 8px; }
+    .build p { color: #bbb; font-size: 0.95rem; }
+    footer { text-align: center; padding: 26px 16px 40px; border-top: 1px solid rgba(255,255,255,0.1); color: #888; }
+    footer a { color: #bbb; }
+  </style>
+</head>
+<body>
+<header>
+  <a href="Home/" class="logo"><img src="avatar.svg" alt="logo">Сайт Enelamine</a>
+</header>
+
+<main>
+  <!-- EDIT: заголовок и текст -->
+  <h1>Сборки Eneos</h1>
+  <p>Описание раздела. Кинешь свой текст — вставлю.</p>
+
+  <div class="builds">
+    <!-- EDIT: карточки сборок (название, описание, ссылка) -->
+    <a href="#" class="build"><h2>Сборка 1</h2><p>Описание сборки 1.</p></a>
+    <a href="#" class="build"><h2>Сборка 2</h2><p>Описание сборки 2.</p></a>
+    <a href="#" class="build"><h2>Сборка 3</h2><p>Описание сборки 3.</p></a>
+  </div>
+</main>
+
+<footer>
+  <p>© 2026 Сайт Enelamine · <a href="Home/">На главную</a></p>
+</footer>
+</body>
+</html>
