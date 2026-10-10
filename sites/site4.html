@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>РЎР°Р№С‚ 1</title>
+  <title>Сайт 4</title>
   <link rel="icon" type="image/svg+xml" href="../avatar.svg">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -14,7 +14,7 @@
       --accent: #a855f7;
       --accent2: #667eea;
     }
-    /* С‚РµРјС‹ РјРµРЅСЏСЋС‚ С‚РѕР»СЊРєРѕ Р°РєС†РµРЅС‚С‹, С„РѕРЅ РІСЃРµРіРґР° РѕРґРёРЅ */
+    /* темы меняют только акценты, фон всегда один */
     body[data-theme="blue"] { --accent: #3b82f6; --accent2: #22d3ee; }
     body[data-theme="green"] { --accent: #22c55e; --accent2: #a3e635; }
     body {
@@ -84,23 +84,23 @@
 <div class="bg-blobs"><div class="blob b1"></div><div class="blob b2"></div></div>
 
 <header>
-  <a href="../index.html" class="logo"><img src="../avatar.svg" alt="logo"><!-- EDIT -->РЎР°Р№С‚ 1</a>
-  <button id="themeBtn">рџЋЁ РўРµРјР°</button>
+  <a href="../index.html" class="logo"><img src="../avatar.svg" alt="logo"><!-- EDIT -->Сайт 4</a>
+  <button id="themeBtn">🎨 Тема</button>
 </header>
 
 <main>
-  <!-- EDIT: Р·Р°РіРѕР»РѕРІРѕРє Рё С‚РµРєСЃС‚ -->
-  <h1>РЎР°Р№С‚ 1</h1>
-  <p>РћРїРёСЃР°РЅРёРµ. РљРёРЅРµС€СЊ СЃРІРѕР№ С‚РµРєСЃС‚ вЂ” РІСЃС‚Р°РІР»СЋ.</p>
+  <!-- EDIT: заголовок и текст -->
+  <h1>Сайт 4</h1>
+  <p>Описание. Кинешь свой текст — вставлю.</p>
 </main>
 
 <footer>
   <!-- EDIT -->
-  <p>В© 2026 РЎР°Р№С‚ 1 В· <a href="../index.html">РќР° РіР»Р°РІРЅСѓСЋ</a></p>
+  <p>© 2026 Сайт 4 · <a href="../index.html">На главную</a></p>
 </footer>
 
 <script>
-  // С‚РµРјС‹: С„РёРѕР»РµС‚ в†’ СЃРёРЅРёР№ в†’ Р·РµР»РµРЅС‹Р№, С„РѕРЅ РЅРµ РјРµРЅСЏРµС‚СЃСЏ
+  // темы: фиолет → синий → зеленый, фон не меняется
   const themes = ['', 'blue', 'green'];
   let ti = 0;
   try { ti = Math.max(0, themes.indexOf(localStorage.getItem('site4-theme') || '')); } catch (e) {}
@@ -114,4 +114,3 @@
 </script>
 </body>
 </html>
-
