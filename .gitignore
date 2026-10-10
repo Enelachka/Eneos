@@ -14,3 +14,11 @@ server.py
 *.iso
 make_iso.py
 boot_image.bin
+
+# игра (exe на рабочем столе, исходники только локально)
+game_race.py
+EneosRacer.spec
+build/
+dist/
+__pycache__/
+*.pyc
